@@ -45,4 +45,8 @@ public class SpotifyTokenService {
         }
         return spotifyToken;
     }
+
+    public synchronized void refreshToken(){
+        spotifyToken=fetchSpotifyToken();
+    }
 }
