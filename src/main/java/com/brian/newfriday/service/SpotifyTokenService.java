@@ -12,13 +12,15 @@ public class SpotifyTokenService {
     @Value("${app.spotify.clientBearer}")
     private String clientBearer;
 
-    public SpotifyTokenService(){
+    private final RestClient restClient;
 
+    public SpotifyTokenService(RestClient restClient){
+        this.restClient=restClient;
     }
 
     public String fetchSpotifyToken(){
-        RestClient spotifyClient = RestClient.create();
-        JsonNode jsonResponse = spotifyClient.post()
+
+        JsonNode jsonResponse = restClient.post()
                 .uri("https://accounts.spotify.com/api/token")
                 .headers(headers->{
                     headers.set("Authorization",clientBearer);

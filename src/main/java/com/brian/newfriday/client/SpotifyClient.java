@@ -1,5 +1,5 @@
 package com.brian.newfriday.client;
 
-public interface SpotifyClient {
+public class SpotifyClient {
 
 }
