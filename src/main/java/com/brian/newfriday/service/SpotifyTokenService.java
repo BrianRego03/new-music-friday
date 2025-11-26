@@ -16,7 +16,7 @@ public class SpotifyTokenService {
 
     }
 
-    public void fetchSpotifyToken(){
+    public String fetchSpotifyToken(){
         RestClient spotifyClient = RestClient.create();
         JsonNode jsonResponse = spotifyClient.post()
                 .uri("https://accounts.spotify.com/api/token")
@@ -29,5 +29,18 @@ public class SpotifyTokenService {
                 .body(JsonNode.class);
 
         System.out.println(jsonResponse);
+        if(jsonResponse != null){
+            return jsonResponse.get("access_token").asText();
+        }else{
+            return null;
+        }
+
+    }
+
+    public synchronized String getSpotifyToken(){
+        if (spotifyToken==null){
+            spotifyToken=fetchSpotifyToken();
+        }
+        return spotifyToken;
     }
 }

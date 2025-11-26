@@ -12,7 +12,7 @@ public class NewfridayApplication {
 		ConfigurableApplicationContext context = SpringApplication.run(NewfridayApplication.class, args);
         System.out.println("Hi");
         var servicing = context.getBean(SpotifyTokenService.class);
-        servicing.fetchSpotifyToken();
+//        System.out.println(servicing.fetchSpotifyToken());
 	}
 
 }
