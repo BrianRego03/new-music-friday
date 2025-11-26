@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.function.Supplier;
 
 @Service
@@ -31,6 +33,40 @@ public class SpotifyClient {
                 .body(JsonNode.class)
 
         );
+
+        System.out.println(user.get("name"));
+        System.out.println(user.get("href"));
+        return;
+    }
+
+    public void getArtistInclusive(String id){
+        if(id==null){
+            return;
+        }
+        var user = executeWithTokenRetry(()->restClient.get()
+                .uri(baseUrl + "artists/" + id +"/albums?include_groups=album,single&market=US&limit=50")
+                .header("Authorization", "Bearer " + spotifyTokenService.getSpotifyToken())
+                .retrieve()
+                .body(JsonNode.class)
+
+        );
+        JsonNode userItems = user.get("items");
+        if(userItems!=null && userItems.isArray()){
+
+            ArrayList<JsonNode> itemsList = new ArrayList<>();
+            userItems.forEach(itemsList::add);
+
+            itemsList.sort((a,b)->{
+                String dateA = a.get("release_date").asText();
+                String dateB = b.get("release_date").asText();
+                return dateA.compareTo(dateB);
+            });
+
+            for(JsonNode item : itemsList){
+
+                System.out.println(item.get("name") + " released on " + item.get("release_date"));
+            }
+        }
 
         System.out.println(user.get("name"));
         System.out.println(user.get("href"));
