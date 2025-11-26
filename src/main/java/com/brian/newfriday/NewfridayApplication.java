@@ -17,7 +17,8 @@ public class NewfridayApplication {
         var altService = context.getBean(SpotifyClient.class);
 //        altService.getArtist("1oPRcJUkloHaRLYx0olBLJ");
 //        altService.getArtistInclusive("1oPRcJUkloHaRLYx0olBLJ");
-        altService.getArtistInclusive("2gsggkzM5R49q6jpPvazou");
+//        altService.getArtistInclusive("2gsggkzM5R49q6jpPvazou");
+//        altService.searchArtist("magdalena bay");
 	}
 
 }

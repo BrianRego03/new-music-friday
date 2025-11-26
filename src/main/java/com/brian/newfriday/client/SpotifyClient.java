@@ -73,6 +73,40 @@ public class SpotifyClient {
         return;
     }
 
+    public void searchArtist(String searchtext){
+        if(searchtext==null){
+            return;
+        }
+        var user = executeWithTokenRetry(()->restClient.get()
+                .uri(builder -> builder
+                        .scheme("https")
+                        .host("api.spotify.com")
+                        .path("/v1/search")
+                        .queryParam("q",searchtext)
+                        .queryParam("type","artist")
+                        .build())
+                .header("Authorization", "Bearer " + spotifyTokenService.getSpotifyToken())
+                .retrieve()
+                .body(JsonNode.class)
+
+        );
+        JsonNode userArtists = user.get("artists");
+        JsonNode userItems = userArtists.get("items");
+        if(userItems!=null && userItems.isArray()){
+
+            ArrayList<JsonNode> itemsList = new ArrayList<>();
+            userItems.forEach(itemsList::add);
+
+            for(JsonNode item : itemsList){
+
+                System.out.println(item.get("name") + " with popularity " + item.get("popularity"));
+            }
+        }
+
+//        System.out.println(user.get("name"));
+//        System.out.println(user.get("href"));
+        return;
+    }
     private <T> T executeWithTokenRetry(Supplier<T> request){
         try{
             return request.get();
