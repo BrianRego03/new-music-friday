@@ -2,6 +2,7 @@ package com.brian.newfriday;
 
 import com.brian.newfriday.client.SpotifyClient;
 import com.brian.newfriday.service.SpotifyTokenService;
+import com.brian.newfriday.service.UserService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -19,6 +20,8 @@ public class NewfridayApplication {
 //        altService.getArtistInclusive("1oPRcJUkloHaRLYx0olBLJ");
 //        altService.getArtistInclusive("2gsggkzM5R49q6jpPvazou");
 //        altService.searchArtist("magdalena bay");
+        var userServicer = context.getBean(UserService.class);
+        userServicer.registerUser("Tina","tina1717@gmail.com","funnystuff");
 	}
 
 }

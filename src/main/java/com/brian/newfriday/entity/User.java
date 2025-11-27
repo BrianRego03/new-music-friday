@@ -37,6 +37,7 @@ public class User {
         this.email=email;
         this.password=password;
         this.createTime=LocalDate.now();
+        this.role=Role.USER;
     }
 
     public String getName(){return this.name;}
