@@ -27,4 +27,9 @@ public class UserService {
         return userRepository.findAll(Sort.by(sort));
     }
 
+    public String DeleteUser(int id){
+        userRepository.deleteById(id);
+        return "Success";
+    }
+
 }
