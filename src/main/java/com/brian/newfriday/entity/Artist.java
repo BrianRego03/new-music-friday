@@ -44,4 +44,27 @@ public class Artist {
 
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getImgSmall() {
+        return imgSmall;
+    }
+
+    public String getImgMedium() {
+        return imgMedium;
+    }
+
+    public String getImgLarge() {
+        return imgLarge;
+    }
+
+    public String getSpotifyID() {
+        return spotifyID;
+    }
 }
