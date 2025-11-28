@@ -67,4 +67,24 @@ public class Artist {
     public String getSpotifyID() {
         return spotifyID;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setImgSmall(String imgSmall) {
+        this.imgSmall = imgSmall;
+    }
+
+    public void setImgMedium(String imgMedium) {
+        this.imgMedium = imgMedium;
+    }
+
+    public void setImgLarge(String imgLarge) {
+        this.imgLarge = imgLarge;
+    }
+
+    public void setSpotifyID(String spotifyID) {
+        this.spotifyID = spotifyID;
+    }
 }
