@@ -32,4 +32,16 @@ public class Artist {
     @CreationTimestamp
     private LocalDate createTime;
 
+    public Artist(){}
+
+    public Artist(String name, String spotifyID, String imgSmall, String imgMedium, String imgLarge){
+        this.name=name;
+        this.spotifyID=spotifyID;
+        this.imgSmall=imgSmall;
+        this.imgMedium=imgMedium;
+        this.imgLarge=imgLarge;
+        this.createTime=LocalDate.now();
+
+    }
+
 }
