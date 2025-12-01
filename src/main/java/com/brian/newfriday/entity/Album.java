@@ -1,6 +1,7 @@
 package com.brian.newfriday.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 
@@ -38,6 +39,20 @@ public class Album {
     @Column(name = "album_type")
     private Record albumType;
 
+    @Column(name = "creation_time",updatable = false,nullable = false)
+    @CreationTimestamp
+    private LocalDate createTime;
 
-
+    public Album(String name, String spotifyID, String imgSmall, String imgMedium,
+                 String imgLarge, int trackLength, LocalDate releaseDate, Record albumType){
+        this.name=name;
+        this.spotifyID=spotifyID;
+        this.imgSmall=imgSmall;
+        this.imgMedium=imgMedium;
+        this.imgLarge=imgLarge;
+        this.trackLength=trackLength;
+        this.releaseDate=releaseDate;
+        this.albumType=albumType;
+        this.createTime=LocalDate.now();
+    }
 }
