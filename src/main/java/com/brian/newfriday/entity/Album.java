@@ -34,7 +34,9 @@ public class Album {
     @Column(name = "release_date")
     private LocalDate releaseDate;
 
-
+    @Enumerated(EnumType.STRING)
+    @Column(name = "album_type")
+    private Record albumType;
 
 
 
