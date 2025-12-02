@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "albums")
@@ -42,6 +44,14 @@ public class Album {
     @Column(name = "creation_time",updatable = false,nullable = false)
     @CreationTimestamp
     private LocalDate createTime;
+
+    @ManyToMany
+    @JoinTable(
+            name = "artist_albums",
+            joinColumns = @JoinColumn(name = "album_id"),
+            inverseJoinColumns = @JoinColumn(name = "artist_id")
+    )
+    private Set<Artist> artistSet = new HashSet<>();
 
     public Album(String name, String spotifyID, String imgSmall, String imgMedium,
                  String imgLarge, int trackLength, LocalDate releaseDate, Record albumType){

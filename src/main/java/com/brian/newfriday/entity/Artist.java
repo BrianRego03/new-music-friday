@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name="artists")
@@ -31,6 +33,9 @@ public class Artist {
     @Column(name="create_time",updatable = false, nullable = false)
     @CreationTimestamp
     private LocalDate createTime;
+
+    @ManyToMany(mappedBy = "artistSet")
+    private Set<Album> albumSet = new HashSet<>();
 
     public Artist(){}
 
