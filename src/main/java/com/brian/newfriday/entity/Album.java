@@ -91,4 +91,47 @@ public class Album {
     public int getId() {
         return id;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSpotifyID(String spotifyID) {
+        this.spotifyID = spotifyID;
+    }
+
+    public void setImgSmall(String imgSmall) {
+        this.imgSmall = imgSmall;
+    }
+
+    public void setImgMedium(String imgMedium) {
+        this.imgMedium = imgMedium;
+    }
+
+    public void setImgLarge(String imgLarge) {
+        this.imgLarge = imgLarge;
+    }
+
+    public void setAlbumType(Record albumType) {
+        this.albumType = albumType;
+    }
+
+    public void setReleaseDate(LocalDate releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    public void setTrackLength(int trackLength) {
+        this.trackLength = trackLength;
+    }
+
+    @Override
+    public String toString() {
+        return "Album{" +
+                "name='" + name + '\'' +
+                ", spotifyID='" + spotifyID + '\'' +
+                ", trackLength=" + trackLength +
+                ", releaseDate=" + releaseDate +
+                ", albumType=" + albumType +
+                '}';
+    }
 }
