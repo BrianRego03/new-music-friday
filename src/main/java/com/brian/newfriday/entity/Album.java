@@ -87,4 +87,8 @@ public class Album {
     public Record getAlbumType() {
         return albumType;
     }
+
+    public int getId() {
+        return id;
+    }
 }
