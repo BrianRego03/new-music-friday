@@ -55,4 +55,36 @@ public class Album {
         this.albumType=albumType;
         this.createTime=LocalDate.now();
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSpotifyID() {
+        return spotifyID;
+    }
+
+    public String getImgSmall() {
+        return imgSmall;
+    }
+
+    public String getImgMedium() {
+        return imgMedium;
+    }
+
+    public String getImgLarge() {
+        return imgLarge;
+    }
+
+    public int getTrackLength() {
+        return trackLength;
+    }
+
+    public LocalDate getReleaseDate() {
+        return releaseDate;
+    }
+
+    public Record getAlbumType() {
+        return albumType;
+    }
 }
