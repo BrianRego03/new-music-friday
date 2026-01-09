@@ -45,12 +45,7 @@ public class Album {
     @CreationTimestamp
     private LocalDate createTime;
 
-    @ManyToMany
-    @JoinTable(
-            name = "artist_albums",
-            joinColumns = @JoinColumn(name = "album_id"),
-            inverseJoinColumns = @JoinColumn(name = "artist_id")
-    )
+    @ManyToMany(mappedBy = "albumSet")
     private Set<Artist> artistSet = new HashSet<>();
 
     public Album(String name, String spotifyID, String imgSmall, String imgMedium,

@@ -34,7 +34,12 @@ public class Artist {
     @CreationTimestamp
     private LocalDate createTime;
 
-    @ManyToMany(mappedBy = "artistSet")
+    @ManyToMany
+    @JoinTable(
+            name = "artist_albums",
+            joinColumns = @JoinColumn(name = "artist_id"),
+            inverseJoinColumns = @JoinColumn(name = "album_id")
+    )
     private Set<Album> albumSet = new HashSet<>();
 
     public Artist(){}
