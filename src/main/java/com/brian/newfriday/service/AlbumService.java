@@ -1,6 +1,7 @@
 package com.brian.newfriday.service;
 
 import com.brian.newfriday.entity.Album;
+import com.brian.newfriday.entity.Artist;
 import com.brian.newfriday.entity.Record;
 import com.brian.newfriday.repository.AlbumRepository;
 import com.brian.newfriday.repository.ArtistRepository;
@@ -46,5 +47,13 @@ public class AlbumService {
 
     public List<Album> getAlbumsByType(Record albumType){
         return albumRepository.findByAlbumType(albumType);
+    }
+
+    public List<Artist> getArtistsByAlbumId(int albumId){
+        Album album = albumRepository.findById(albumId).orElse(null);
+        if (album != null) {
+            return List.copyOf(album.getArtistSet());
+        }
+        return List.of();
     }
 }
