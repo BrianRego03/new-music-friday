@@ -138,6 +138,16 @@ public class Album {
         this.trackLength = trackLength;
     }
 
+    public void addArtist(Artist artist){
+        this.artistSet.add(artist);
+        artist.getAlbumSet().add(this);
+    }
+
+    public void removeArtist(Artist artist){
+        this.artistSet.remove(artist);
+        artist.getAlbumSet().remove(this);
+    }
+
     @Override
     public String toString() {
         return "Album{" +
