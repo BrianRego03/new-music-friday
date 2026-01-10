@@ -40,6 +40,10 @@ public class ArtistService {
         return artistRepository.findBySpotifyID(spotifyID);
     }
 
+    public boolean existsBySpotifyID(String spotifyID){
+        return artistRepository.existsBySpotifyID(spotifyID);
+    }
+
 
 
 
