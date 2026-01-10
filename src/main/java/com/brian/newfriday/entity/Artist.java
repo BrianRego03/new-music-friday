@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -78,6 +79,14 @@ public class Artist {
         return spotifyID;
     }
 
+    public Set<Album> getAlbumSet() {
+        return albumSet;
+    }
+
+    public List<Album> getAlbumList() {
+        return albumSet.stream().toList();
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -97,6 +106,18 @@ public class Artist {
     public void setSpotifyID(String spotifyID) {
         this.spotifyID = spotifyID;
     }
+
+    public void addAlbum(Album album){
+        this.albumSet.add(album);
+        album.getArtistSet().add(this);
+    }
+
+    public void removeAlbum(Album album){
+        this.albumSet.remove(album);
+        album.getArtistSet().remove(this);
+    }
+
+
 
     @Override
     public String toString(){
