@@ -125,6 +125,20 @@ public class ArtistService {
         artist.getAlbumSet().clear();
     }
 
+    public List<Album> getAlbumsByArtistId(int artistId){
+        Artist artist = artistRepository.findById(artistId)
+                .orElseThrow(() -> new EntityNotFoundException("Artist not found with ID: " + artistId));
+        return List.copyOf(artist.getAlbumSet());
+    }
+
+    public List<Album> getAlbumsByArtistSpotifyID(String artistId){
+        Artist artist = artistRepository.findBySpotifyID(artistId);
+        if(artist == null){
+            throw new EntityNotFoundException("Artist not found with Spotify ID: " + artistId);
+        }
+        return artist.getAlbumList();
+    }
+
 
 
 
