@@ -6,9 +6,12 @@ import com.brian.newfriday.repository.AlbumRepository;
 import com.brian.newfriday.repository.ArtistRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -139,7 +142,17 @@ public class ArtistService {
         return artist.getAlbumList();
     }
 
+    @Transactional
+    public Page<Album> getAlbumsByArtistSpotifyID(String artistId, LocalDate fromDate,
+                                                  LocalDate toDate, Pageable pageable)
+    {
 
+        if(!artistRepository.existsBySpotifyID(artistId)){
+            throw new EntityNotFoundException("Artist not found with Spotify ID: " + artistId);
+        }
+        return artistRepository.getAlbumsBySpotifyIDAndReleaseDateBetween(artistId, fromDate,
+                toDate, pageable);
+    }
 
 
 }
