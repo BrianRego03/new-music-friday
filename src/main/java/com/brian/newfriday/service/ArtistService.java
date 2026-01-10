@@ -36,5 +36,11 @@ public class ArtistService {
         return "Success";
     }
 
+    public Artist getArtistBySpotifyID(String spotifyID){
+        return artistRepository.findBySpotifyID(spotifyID);
+    }
+
+
+
 
 }
