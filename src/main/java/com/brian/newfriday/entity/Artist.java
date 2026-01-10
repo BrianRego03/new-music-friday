@@ -43,6 +43,9 @@ public class Artist {
     )
     private Set<Album> albumSet = new HashSet<>();
 
+    @ManyToMany(mappedBy="artistSet")
+    private Set<User> userSet = new HashSet<>();
+
 
     public Artist(String name, String spotifyID, String imgSmall, String imgMedium, String imgLarge){
         this.name=name;
