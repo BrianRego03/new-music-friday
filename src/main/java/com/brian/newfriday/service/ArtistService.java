@@ -109,6 +109,22 @@ public class ArtistService {
         artist.removeAlbum(album);
     }
 
+    @Transactional
+    public void removeAllAlbums(int artistId){
+        Artist artist = artistRepository.findById(artistId)
+                .orElseThrow(() -> new EntityNotFoundException("Artist not found with ID: " + artistId));
+        artist.getAlbumSet().clear();
+    }
+
+    @Transactional
+    public void removeAllAlbumsBySpotifyID(String artistId){
+        Artist artist = artistRepository.findBySpotifyID(artistId);
+        if(artist == null){
+            throw new EntityNotFoundException("Artist not found with Spotify ID: " + artistId);
+        }
+        artist.getAlbumSet().clear();
+    }
+
 
 
 
