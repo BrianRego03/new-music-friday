@@ -43,7 +43,6 @@ public class Artist {
     )
     private Set<Album> albumSet = new HashSet<>();
 
-    public Artist(){}
 
     public Artist(String name, String spotifyID, String imgSmall, String imgMedium, String imgLarge){
         this.name=name;
