@@ -4,6 +4,6 @@ import com.brian.newfriday.entity.Artist;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ArtistRepository extends JpaRepository<Artist,Integer> {
-    Artist findBySpotifyID(String spotifyId);
-    Boolean existsBySpotifyID(String spotifyId);
+    Artist findBySpotifyID(String spotifyID);
+    Boolean existsBySpotifyID(String spotifyID);
 }

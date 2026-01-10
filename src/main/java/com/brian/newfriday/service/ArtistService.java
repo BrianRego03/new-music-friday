@@ -1,7 +1,10 @@
 package com.brian.newfriday.service;
 
+import com.brian.newfriday.entity.Album;
 import com.brian.newfriday.entity.Artist;
+import com.brian.newfriday.repository.AlbumRepository;
 import com.brian.newfriday.repository.ArtistRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -11,9 +14,11 @@ import java.util.List;
 @Service
 public class ArtistService {
     private final ArtistRepository artistRepository;
+    private final AlbumRepository albumRepository;
 
-    public ArtistService(ArtistRepository artistRepository){
+    public ArtistService(ArtistRepository artistRepository, AlbumRepository albumRepository){
         this.artistRepository=artistRepository;
+        this.albumRepository=albumRepository;
     }
 
     @Transactional
@@ -42,6 +47,66 @@ public class ArtistService {
 
     public boolean existsBySpotifyID(String spotifyID){
         return artistRepository.existsBySpotifyID(spotifyID);
+    }
+
+    @Transactional
+    public void addAlbumBySpotifyID(String artistId, String albumId){
+        Artist artist = artistRepository.findBySpotifyID(artistId);
+        Album album = albumRepository.findBySpotifyID(albumId);
+        if(artist == null){
+            throw new EntityNotFoundException("Artist not found with Spotify ID: " + artistId);
+        }
+        if(album == null){
+            throw new EntityNotFoundException("Album not found with Spotify ID: " + albumId);
+        }
+
+        if(artist.getAlbumSet().contains(album)){
+            return;
+        }
+        artist.addAlbum(album);
+    }
+
+    @Transactional
+    public void AddAlbumById(int artistId, int albumId){
+        Artist artist = artistRepository.findById(artistId)
+                .orElseThrow(() -> new EntityNotFoundException("Artist not found with ID: " + artistId));
+        Album album = albumRepository.findById(albumId)
+                .orElseThrow(() -> new EntityNotFoundException("Album not found with ID: " + albumId));
+
+        if(artist.getAlbumSet().contains(album)){
+            return;
+        }
+        artist.addAlbum(album);
+    }
+
+    @Transactional
+    public void removeAlbumById(int artistId, int albumId){
+        Artist artist = artistRepository.findById(artistId)
+                .orElseThrow(() -> new EntityNotFoundException("Artist not found with ID: " + artistId));
+        Album album = albumRepository.findById(albumId)
+                .orElseThrow(() -> new EntityNotFoundException("Album not found with ID: " + albumId));
+
+        if(!artist.getAlbumSet().contains(album)){
+            return;
+        }
+        artist.removeAlbum(album);
+    }
+
+    @Transactional
+    public void removeAlbumBySpotifyID(String artistId, String albumId){
+        Artist artist = artistRepository.findBySpotifyID(artistId);
+        Album album = albumRepository.findBySpotifyID(albumId);
+        if(artist == null){
+            throw new EntityNotFoundException("Artist not found with Spotify ID: " + artistId);
+        }
+        if(album == null){
+            throw new EntityNotFoundException("Album not found with Spotify ID: " + albumId);
+        }
+
+        if(!artist.getAlbumSet().contains(album)){
+            return;
+        }
+        artist.removeAlbum(album);
     }
 
 
