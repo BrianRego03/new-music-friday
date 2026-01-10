@@ -5,6 +5,7 @@ import com.brian.newfriday.entity.Artist;
 import com.brian.newfriday.entity.Record;
 import com.brian.newfriday.repository.AlbumRepository;
 import com.brian.newfriday.repository.ArtistRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -32,16 +33,28 @@ public class AlbumService {
         return albumRepository.findById(id).orElse(null);
     }
 
-    public String DeleteAlbum(int id){
-        albumRepository.deleteById(id);
-        return "Success";
+    @Transactional
+    public void DeleteAlbum(int id){
+        Album album = albumRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("Album not found with id " + id));
+
+        album.getArtistSet().forEach(artist -> artist.getAlbumSet().remove(album));
+        album.getArtistSet().clear();
+        albumRepository.delete(album);
+
     }
 
+    @Transactional
     public void DeleteAlbumBySpotifyID(String spotifyID){
         Album album = albumRepository.findBySpotifyID(spotifyID);
-        if (album != null) {
-            albumRepository.delete(album);
+        if (album == null) {
+            throw new EntityNotFoundException("Album not found with Spotify ID " + spotifyID);
         }
+        album.getArtistSet().forEach(artist -> artist.getAlbumSet().remove(album));
+        album.getArtistSet().clear();
+        albumRepository.delete(album);
+
+
     }
 
     public Album getAlbumBySpotifyID(String spotifyID){
