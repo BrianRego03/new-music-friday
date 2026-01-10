@@ -37,6 +37,13 @@ public class AlbumService {
         return "Success";
     }
 
+    public void DeleteAlbumBySpotifyID(String spotifyID){
+        Album album = albumRepository.findBySpotifyID(spotifyID);
+        if (album != null) {
+            albumRepository.delete(album);
+        }
+    }
+
     public Album getAlbumBySpotifyID(String spotifyID){
         return albumRepository.findBySpotifyID(spotifyID);
     }
