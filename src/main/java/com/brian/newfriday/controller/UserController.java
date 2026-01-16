@@ -1,15 +1,18 @@
 package com.brian.newfriday.controller;
 
+import com.brian.newfriday.dtos.RegisterUserRequest;
 import com.brian.newfriday.dtos.UserDto;
+import com.brian.newfriday.entity.Role;
 import com.brian.newfriday.mappers.UserMapper;
 import com.brian.newfriday.repository.UserRepository;
 import com.brian.newfriday.service.UserService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class UserController {
@@ -38,6 +41,26 @@ public class UserController {
     public UserDto getUserById(@PathVariable int id){
         var user = userService.getById(id);
         return userMapper.toDto(user);
+    }
+
+    @PostMapping("/users")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterUserRequest userRequest,
+           UriComponentsBuilder uriBuilder){
+        if(userRepository.existsByEmail(userRequest.getEmail())){
+            return ResponseEntity
+                    .badRequest()
+                    .body(Map.of("email","Email is already in use"));
+        }
+        var user = userMapper.toEntity(userRequest);
+        user.setPassword(user.getPassword());
+        user.setRole(Role.USER);
+        userRepository.save(user);
+        var userDto = userMapper.toDto(user);
+        var uri = uriBuilder.path("/users/{id}")
+                .buildAndExpand(userDto.getId())
+                .toUri();
+        return ResponseEntity.created(uri).body(userDto);
+
     }
 
 }
