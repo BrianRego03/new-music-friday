@@ -77,4 +77,13 @@ public class UserController {
         return ResponseEntity.ok(userDto);
     }
 
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable int id){
+        if(!userRepository.existsById(id)){
+            return ResponseEntity.notFound().build();
+        }
+        userRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }
