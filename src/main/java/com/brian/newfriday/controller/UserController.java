@@ -1,6 +1,7 @@
 package com.brian.newfriday.controller;
 
 import com.brian.newfriday.dtos.RegisterUserRequest;
+import com.brian.newfriday.dtos.UpdateUserRequest;
 import com.brian.newfriday.dtos.UserDto;
 import com.brian.newfriday.entity.Role;
 import com.brian.newfriday.mappers.UserMapper;
@@ -63,10 +64,17 @@ public class UserController {
 
     }
 
-//    @PutMapping("/users/{id}")
-//    public ResponseEntity<UserDto> updateUser(@PathVariable int id,
-//                                              @Valid @RequestBody RegisterUserRequest userRequest){
-//        var user = userRepository.findById(id);
-//    }
+    @PutMapping("/users/{id}")
+    public ResponseEntity<UserDto> updateUser(@PathVariable int id,
+                                              @Valid @RequestBody UpdateUserRequest userRequest){
+        var user = userRepository.findById(id).orElse(null);
+        if(user==null){
+            return ResponseEntity.notFound().build();
+        }
+        userMapper.update(userRequest,user);
+        userRepository.save(user);
+        var userDto = userMapper.toDto(user);
+        return ResponseEntity.ok(userDto);
+    }
 
 }
