@@ -5,6 +5,7 @@ import com.brian.newfriday.mappers.UserMapper;
 import com.brian.newfriday.repository.UserRepository;
 import com.brian.newfriday.service.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,4 +33,11 @@ public class UserController {
                 .map(userMapper::toDto)
                 .toList();
     }
+
+    @GetMapping("/users/{id}")
+    public UserDto getUserById(@PathVariable int id){
+        var user = userService.getById(id);
+        return userMapper.toDto(user);
+    }
+
 }
