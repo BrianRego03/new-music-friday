@@ -63,4 +63,10 @@ public class UserController {
 
     }
 
+//    @PutMapping("/users/{id}")
+//    public ResponseEntity<UserDto> updateUser(@PathVariable int id,
+//                                              @Valid @RequestBody RegisterUserRequest userRequest){
+//        var user = userRepository.findById(id);
+//    }
+
 }
