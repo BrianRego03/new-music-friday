@@ -1,5 +1,6 @@
 package com.brian.newfriday.controller;
 
+import com.brian.newfriday.dtos.ChangePasswordRequest;
 import com.brian.newfriday.dtos.RegisterUserRequest;
 import com.brian.newfriday.dtos.UpdateUserRequest;
 import com.brian.newfriday.dtos.UserDto;
@@ -8,6 +9,7 @@ import com.brian.newfriday.mappers.UserMapper;
 import com.brian.newfriday.repository.UserRepository;
 import com.brian.newfriday.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -85,5 +87,28 @@ public class UserController {
         userRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/users/{id}/change-password")
+    public ResponseEntity<?> changePassword(@PathVariable int id,
+                                            @RequestBody ChangePasswordRequest passwordRequest){
+        var user = userRepository.findById(id).orElse(null);
+        if(user==null){
+            return ResponseEntity.notFound().build();
+        }
+        String newPassword = passwordRequest.getNewPassword();
+        if(newPassword==null || newPassword.isBlank()){
+            return ResponseEntity.badRequest()
+                    .body(Map.of("newPassword","New password must not be blank"));
+        }
+        if(!(user.getPassword().equals(passwordRequest.getOldPassword()))){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        user.setPassword(newPassword);
+        userRepository.save(user);
+
+        return ResponseEntity.noContent().build();
+    }
+
+
 
 }
