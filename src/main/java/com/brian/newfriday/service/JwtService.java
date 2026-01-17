@@ -1,8 +1,10 @@
 package com.brian.newfriday.service;
 
 import com.brian.newfriday.config.JwtConfig;
+import com.brian.newfriday.entity.Role;
 import com.brian.newfriday.entity.User;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Service;
 
@@ -46,5 +48,25 @@ public class JwtService {
                 .parseSignedClaims(token)
                 .getPayload();
         return claims;
+    }
+
+    public boolean validateToken(String token){
+        try{
+            var claims =getClaims(token);
+            return claims.getExpiration().after(new Date());
+        }
+        catch(JwtException ex){
+            return false;
+
+        }
+    }
+
+    public Integer getIdfromToken(String token){
+        var claimSub = Integer.valueOf(getClaims(token).getSubject());
+        return claimSub;
+    }
+
+    public Role getRoleFromToken(String token){
+        return Role.valueOf(getClaims(token).get("role",String.class));
     }
 }
