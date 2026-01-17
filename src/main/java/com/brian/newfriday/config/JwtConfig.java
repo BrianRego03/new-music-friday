@@ -33,11 +33,11 @@ public class JwtConfig {
         return this.secret;
     }
 
-    public Long getAccessTokenExpiration(){
+    public long getAccessTokenExpiration(){
         return this.accessTokenExpiration;
     }
 
-    public Long getRefreshTokenExpiration(){
+    public long getRefreshTokenExpiration(){
         return this.refreshTokenExpiration;
     }
 

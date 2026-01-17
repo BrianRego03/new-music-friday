@@ -1,12 +1,21 @@
 package com.brian.newfriday.controller;
 
 import com.brian.newfriday.config.JwtConfig;
+import com.brian.newfriday.dtos.CredentialsRequest;
+import com.brian.newfriday.dtos.JwtResponse;
 import com.brian.newfriday.mappers.UserMapper;
 import com.brian.newfriday.repository.UserRepository;
 import com.brian.newfriday.service.JwtService;
 import com.brian.newfriday.service.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,5 +38,33 @@ public class AuthController {
         this.jwtService = jwtService;
         this.userMapper = userMapper;
         this.jwtConfig = jwtConfig;
+    }
+
+
+    @PostMapping("/login")
+    public ResponseEntity<JwtResponse> loginAuth(
+            @Valid @RequestBody CredentialsRequest credentialsRequest,
+            HttpServletResponse response
+    ){
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        credentialsRequest.getEmail(),
+                        credentialsRequest.getPassword()
+                )
+        );
+
+        var user = userService.getByEmail(credentialsRequest.getEmail());
+
+        var accessToken = jwtService.generateAccessToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+
+        var cookie = new Cookie("refreshToken", refreshToken);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/auth/login");
+        cookie.setMaxAge((int) jwtConfig.getRefreshTokenExpiration());
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok(new JwtResponse(accessToken));
+
     }
 }
