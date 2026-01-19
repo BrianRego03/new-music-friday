@@ -11,6 +11,7 @@ import com.brian.newfriday.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -22,12 +23,14 @@ public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserController (UserService userService, UserMapper userMapper, UserRepository userRepository
-        ){
+    public UserController (UserService userService, UserMapper userMapper, UserRepository userRepository,
+                            PasswordEncoder passwordEncoder){
         this.userService=userService;
         this.userMapper=userMapper;
         this.userRepository=userRepository;
+        this.passwordEncoder=passwordEncoder;
 
     }
 
@@ -55,7 +58,7 @@ public class UserController {
                     .body(Map.of("email","Email is already in use"));
         }
         var user = userMapper.toEntity(userRequest);
-        user.setPassword(user.getPassword());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.USER);
         userRepository.save(user);
         var userDto = userMapper.toDto(user);
