@@ -11,6 +11,7 @@ import com.brian.newfriday.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -84,6 +85,11 @@ public class UserController {
 
     @DeleteMapping("/users/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable int id){
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        Integer identity = (Integer) authentication.getPrincipal();
+        if(!identity.equals(id)){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         if(!userRepository.existsById(id)){
             return ResponseEntity.notFound().build();
         }
