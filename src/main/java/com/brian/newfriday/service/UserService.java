@@ -32,6 +32,9 @@ public class UserService {
     }
 
     public List<User> getAllUsers(String sort){
+        if (sort == null || sort.isBlank()) {
+            return userRepository.findAll();
+        }
         return userRepository.findAll(Sort.by(sort));
     }
 
