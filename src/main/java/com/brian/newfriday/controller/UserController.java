@@ -109,10 +109,10 @@ public class UserController {
             return ResponseEntity.badRequest()
                     .body(Map.of("newPassword","New password must not be blank"));
         }
-        if(!(user.getPassword().equals(passwordRequest.getOldPassword()))){
+        if(!(passwordEncoder.matches(passwordRequest.getOldPassword(),user.getPassword()))){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        user.setPassword(newPassword);
+        user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
 
         return ResponseEntity.noContent().build();
