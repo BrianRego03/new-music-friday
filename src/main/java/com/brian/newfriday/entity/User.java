@@ -34,7 +34,7 @@ public class User {
 
     @ManyToMany
     @JoinTable(
-            name="user_artist",
+            name="user_artists",
             joinColumns = @JoinColumn(name="user_id"),
             inverseJoinColumns = @JoinColumn(name="artist_id")
     )
