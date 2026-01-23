@@ -1,5 +1,6 @@
 package com.brian.newfriday.client;
 
+import com.brian.newfriday.dtos.SpotifyArtistDto;
 import com.brian.newfriday.service.SpotifyTokenService;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,14 @@ public class SpotifyClient {
                 .retrieve()
                 .body(JsonNode.class)
 
+        );
+
+        SpotifyArtistDto artistDto = new SpotifyArtistDto(
+                user.get("name").asText(),
+                user.get("external_urls").get("spotify").asText(),
+                user.get("images").get(2).get("url").asText(),
+                user.get("images").get(1).get("url").asText(),
+                user.get("images").get(0).get("url").asText()
         );
 
         System.out.println(user.get("name"));
