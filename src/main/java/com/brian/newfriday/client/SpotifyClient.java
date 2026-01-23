@@ -1,6 +1,9 @@
 package com.brian.newfriday.client;
 
 import com.brian.newfriday.dtos.SpotifyArtistDto;
+import com.brian.newfriday.entity.Artist;
+import com.brian.newfriday.mappers.ArtistMapper;
+import com.brian.newfriday.repository.ArtistRepository;
 import com.brian.newfriday.service.SpotifyTokenService;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.http.HttpStatus;
@@ -15,16 +18,21 @@ import java.util.function.Supplier;
 public class SpotifyClient {
     private final RestClient restClient;
     private final SpotifyTokenService spotifyTokenService;
+    private final ArtistMapper artistMapper;
+    private final ArtistRepository artistRepository;
     private final String baseUrl = "https://api.spotify.com/v1/";
 
-    public SpotifyClient(RestClient restClient,SpotifyTokenService spotifyTokenService){
+    public SpotifyClient(RestClient restClient,SpotifyTokenService spotifyTokenService,
+                         ArtistMapper artistMapper, ArtistRepository artistRepository){
         this.restClient=restClient;
         this.spotifyTokenService=spotifyTokenService;
+        this.artistMapper=artistMapper;
+        this.artistRepository=artistRepository;
     }
 
-    public void getArtist(String id){
+    public Artist getArtistFromSpotify(String id){
         if(id==null){
-            return;
+            return null;
         }
         var user = executeWithTokenRetry(()->restClient.get()
                 .uri(baseUrl + "artists/" + id)
@@ -42,9 +50,12 @@ public class SpotifyClient {
                 user.get("images").get(0).get("url").asText()
         );
 
-        System.out.println(user.get("name"));
-        System.out.println(user.get("href"));
-        return;
+        Artist artist = artistMapper.toArtist(artistDto);
+        return artist;
+
+//        System.out.println(user.get("name"));
+//        System.out.println(user.get("href"));
+
     }
 
     public void getAlbumsById(String id){
