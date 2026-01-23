@@ -52,6 +52,10 @@ public class ArtistService {
         return artistRepository.existsBySpotifyID(spotifyID);
     }
 
+    public void saveArtist(Artist artist){
+        artistRepository.save(artist);
+    }
+
     @Transactional
     public void addAlbumBySpotifyID(String artistId, String albumId){
         Artist artist = artistRepository.findBySpotifyID(artistId);
