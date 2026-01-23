@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 public class ArtistController {
     private final ArtistRepository artistRepository;
@@ -26,5 +28,13 @@ public class ArtistController {
     public SpotifyArtistDto getArtistBySpotifyId(@PathVariable String spotifyId){
         Artist artist = artistService.getArtistBySpotifyID(spotifyId);
         return artistMapper.toSpotifyDto(artist);
+    }
+
+    @GetMapping("/artists")
+    public List<SpotifyArtistDto> getAllArtists(){
+        List<Artist> artists = artistService.getAllArtists("name");
+        return artists.stream()
+                .map(artistMapper::toSpotifyDto)
+                .toList();
     }
 }
