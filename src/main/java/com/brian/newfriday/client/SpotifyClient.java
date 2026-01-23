@@ -1,6 +1,8 @@
 package com.brian.newfriday.client;
 
+import com.brian.newfriday.dtos.SpotifyAlbumDto;
 import com.brian.newfriday.dtos.SpotifyArtistDto;
+import com.brian.newfriday.entity.Album;
 import com.brian.newfriday.entity.Artist;
 import com.brian.newfriday.mappers.ArtistMapper;
 import com.brian.newfriday.repository.ArtistRepository;
@@ -12,7 +14,9 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
 import javax.sound.midi.Soundbank;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 @Service
@@ -55,9 +59,9 @@ public class SpotifyClient {
 
     }
 
-    public void getAlbumsById(String id){
+    public List<Album> getAlbumsByArtistSpotifyId(String id){
         if(id==null){
-            return;
+            return null;
         }
         var user = executeWithTokenRetry(()->restClient.get()
                 .uri(baseUrl + "artists/" + id +"/albums?include_groups=album,single&market=US&limit=50")
@@ -67,9 +71,23 @@ public class SpotifyClient {
 
         );
         JsonNode userItems = user.get("items");
+        List<SpotifyAlbumDto> dtoItemList = new ArrayList<>();
         if(userItems!=null && userItems.isArray()){
+            for(JsonNode item : userItems){
+                SpotifyAlbumDto albumDto = new SpotifyAlbumDto(
+                        item.get("name").asText(),
+                        item.get("id").asText(),
+                        item.get("images").get(2).get("url").asText(),
+                        item.get("images").get(1).get("url").asText(),
+                        item.get("images").get(0).get("url").asText(),
+                        item.get("total_tracks").asInt(),
+                        LocalDate.parse(item.get("release_date").asText()),
+                        item.get("album_type").asText()
+                );
+                dtoItemList.add(albumDto);
+            }
 
-            ArrayList<JsonNode> itemsList = new ArrayList<>();
+            List<JsonNode> itemsList = new ArrayList<>();
             userItems.forEach(itemsList::add);
 
             itemsList.sort((a,b)->{
@@ -86,7 +104,7 @@ public class SpotifyClient {
 
         System.out.println(user.get("name"));
         System.out.println(user.get("href"));
-        return;
+        return null;
     }
 
     public void searchArtist(String searchtext){
