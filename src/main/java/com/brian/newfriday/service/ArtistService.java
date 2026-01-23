@@ -69,7 +69,7 @@ public class ArtistService {
     }
 
     @Transactional
-    public List<Album> bulkAddAlbumsToArtist(String spotifyID){
+    public Artist bulkAddAlbumsToArtist(String spotifyID){
         CompleteAlbumDto completeAlbumDto = spotifyClient.getAlbumsByArtistSpotifyId(spotifyID);
         List<Album> finalAlbumList = new ArrayList<>();
         Artist currentArtist = getArtistBySpotifyID(spotifyID);
@@ -89,7 +89,7 @@ public class ArtistService {
             }
             finalAlbumList.add(currentAlbum);
         }
-        return finalAlbumList;
+        return currentArtist;
     }
 
 
