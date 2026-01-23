@@ -42,7 +42,7 @@ public class Album {
     @Column(name = "album_type")
     private Record albumType;
 
-    @Column(name = "creation_time",updatable = false,nullable = false)
+    @Column(name = "create_time",updatable = false,nullable = false)
     @CreationTimestamp
     private LocalDate createTime;
 
@@ -60,6 +60,10 @@ public class Album {
         this.releaseDate=releaseDate;
         this.albumType=albumType;
         this.createTime=LocalDate.now();
+    }
+
+    public Album(){
+
     }
 
     public String getName() {
