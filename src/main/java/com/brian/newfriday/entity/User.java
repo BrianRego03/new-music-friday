@@ -70,4 +70,14 @@ public class User {
         return this.id;
     }
 
+    public Set<Artist> getArtistSet(){
+        return this.artistSet;
+    }
+
+    public void AddArtist(Artist artist){
+        this.artistSet.add(artist);
+        artist.getUserSet().add(this);
+
+    }
+
 }

@@ -119,6 +119,14 @@ public class Artist {
         album.getArtistSet().remove(this);
     }
 
+    public Set<User> getUserSet(){
+        return this.userSet;
+    }
+    public void addUser(User user){
+        this.userSet.add(user);
+        user.getArtistSet().add(this);
+    }
+
 
 
     @Override
