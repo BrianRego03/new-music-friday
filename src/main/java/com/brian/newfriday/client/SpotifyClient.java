@@ -1,5 +1,6 @@
 package com.brian.newfriday.client;
 
+import com.brian.newfriday.dtos.CompleteAlbumDto;
 import com.brian.newfriday.dtos.SpotifyAlbumDto;
 import com.brian.newfriday.dtos.SpotifyArtistDto;
 import com.brian.newfriday.entity.Album;
@@ -63,7 +64,7 @@ public class SpotifyClient {
 
     }
 
-    public List<Album> getAlbumsByArtistSpotifyId(String id){
+    public CompleteAlbumDto getAlbumsByArtistSpotifyId(String id){
         if(id==null){
             return null;
         }
@@ -74,10 +75,14 @@ public class SpotifyClient {
                 .body(JsonNode.class)
 
         );
+        if(user==null){
+            throw new IllegalStateException("Spotify response was bad");
+        }
         JsonNode userItems = user.get("items");
 
         List<Album> AlbumList = new ArrayList<>();
         List<List<String>> artistIds = new ArrayList<>();
+        String currentArtistId="";
         if(userItems!=null && userItems.isArray()){
 
             List<JsonNode> itemsList = new ArrayList<>();
@@ -87,7 +92,7 @@ public class SpotifyClient {
                     a -> LocalDate.parse(a.get("release_date").asText())
             ));
             int minSize = Math.min(itemsList.size(),5);
-            String currentArtistId="";
+
             for(int i=0;i<minSize;i++){
                 JsonNode currentItem = itemsList.get(i);
                 SpotifyAlbumDto albumDto = new SpotifyAlbumDto(
@@ -122,9 +127,8 @@ public class SpotifyClient {
             }
         }
 
-        System.out.println(user.get("name"));
-        System.out.println(user.get("href"));
-        return null;
+
+        return new CompleteAlbumDto(AlbumList,artistIds,currentArtistId);
     }
 
     public void searchArtist(String searchtext){
