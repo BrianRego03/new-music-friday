@@ -3,23 +3,25 @@ package com.brian.newfriday.dtos;
 public class SpotifyArtistDto {
 
     private String name;
-    private String spotifyId;
+    private String spotifyID;
     private String imgSmall;
     private String imgMedium;
     private String imgLarge;
-    public SpotifyArtistDto(String name, String spotifyId, String imgSmall, String imgMedium, String imgLarge){
+    public SpotifyArtistDto(String name, String spotifyID, String imgSmall, String imgMedium, String imgLarge){
         this.name=name;
-        this.spotifyId=spotifyId;
+        this.spotifyID=spotifyID;
         this.imgSmall=imgSmall;
         this.imgMedium=imgMedium;
         this.imgLarge=imgLarge;
     }
 
+    public SpotifyArtistDto(){}
+
     public String getName(){
         return this.name;
     }
-    public String getSpotifyId(){
-        return this.spotifyId;
+    public String getSpotifyID(){
+        return this.spotifyID;
     }
     public String getImgSmall(){
         return this.imgSmall;
@@ -34,8 +36,8 @@ public class SpotifyArtistDto {
     public void setName(String name){
         this.name=name;
     }
-    public void setSpotifyId(String spotifyId){
-        this.spotifyId=spotifyId;
+    public void setSpotifyID(String spotifyID){
+        this.spotifyID=spotifyID;
     }
     public void setImgSmall(String imgSmall){
         this.imgSmall=imgSmall;

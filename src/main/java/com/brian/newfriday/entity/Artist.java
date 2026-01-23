@@ -57,6 +57,8 @@ public class Artist {
 
     }
 
+    public Artist(){}
+
     public int getId() {
         return id;
     }

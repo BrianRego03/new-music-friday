@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
+import javax.sound.midi.Soundbank;
 import java.util.ArrayList;
 import java.util.function.Supplier;
 
@@ -49,12 +50,8 @@ public class SpotifyClient {
                 user.get("images").get(1).get("url").asText(),
                 user.get("images").get(0).get("url").asText()
         );
-
         Artist artist = artistMapper.toArtist(artistDto);
         return artist;
-
-//        System.out.println(user.get("name"));
-//        System.out.println(user.get("href"));
 
     }
 
