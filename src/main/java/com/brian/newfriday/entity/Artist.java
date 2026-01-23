@@ -127,6 +127,11 @@ public class Artist {
         user.getArtistSet().add(this);
     }
 
+    public void removeUser(User user){
+        this.userSet.remove(user);
+        user.getArtistSet().remove(this);
+    }
+
 
 
     @Override
