@@ -1,6 +1,8 @@
 package com.brian.newfriday.service;
 
+import com.brian.newfriday.entity.Artist;
 import com.brian.newfriday.entity.User;
+import com.brian.newfriday.repository.ArtistRepository;
 import com.brian.newfriday.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Sort;
@@ -11,9 +13,11 @@ import java.util.List;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final ArtistRepository artistRepository;
 
-    public UserService(UserRepository userRepository){
+    public UserService(UserRepository userRepository, ArtistRepository artistRepository){
         this.userRepository=userRepository;
+        this.artistRepository=artistRepository;
     }
 
     @Transactional
@@ -42,6 +46,17 @@ public class UserService {
     public String DeleteUser(int id){
         userRepository.deleteById(id);
         return "Success";
+    }
+
+    @Transactional
+    public void addArtistToUser(int userId, String artistId){
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        Artist artist = artistRepository.findBySpotifyID(artistId);
+//        if (artist == null) {
+//
+//        }
+        user.AddArtist(artist);
+        userRepository.save(user);
     }
 
 }
