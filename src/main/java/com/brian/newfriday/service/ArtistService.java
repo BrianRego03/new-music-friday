@@ -1,5 +1,6 @@
 package com.brian.newfriday.service;
 
+import com.brian.newfriday.client.SpotifyClient;
 import com.brian.newfriday.entity.Album;
 import com.brian.newfriday.entity.Artist;
 import com.brian.newfriday.repository.AlbumRepository;
@@ -18,10 +19,13 @@ import java.util.List;
 public class ArtistService {
     private final ArtistRepository artistRepository;
     private final AlbumRepository albumRepository;
+    private final SpotifyClient spotifyClient;
 
-    public ArtistService(ArtistRepository artistRepository, AlbumRepository albumRepository){
+    public ArtistService(ArtistRepository artistRepository, AlbumRepository albumRepository,
+                         SpotifyClient spotifyClient){
         this.artistRepository=artistRepository;
         this.albumRepository=albumRepository;
+        this.spotifyClient=spotifyClient;
     }
 
     @Transactional
@@ -45,13 +49,23 @@ public class ArtistService {
     }
 
     public Artist getArtistBySpotifyID(String spotifyID){
-        return artistRepository.findBySpotifyID(spotifyID);
+        Artist artist = artistRepository.findBySpotifyID(spotifyID);
+        if(artist != null){
+            return artist;
+        }
+        artist = spotifyClient.getArtistFromSpotify(spotifyID);
+        if(artist == null){
+            throw new EntityNotFoundException("Artist not found with Spotify ID: " + spotifyID);
+        }
+        saveArtist(artist);
+        return artist;
     }
 
     public boolean existsBySpotifyID(String spotifyID){
         return artistRepository.existsBySpotifyID(spotifyID);
     }
 
+    @Transactional
     public void saveArtist(Artist artist){
         artistRepository.save(artist);
     }
