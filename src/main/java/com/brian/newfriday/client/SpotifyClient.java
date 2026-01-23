@@ -88,7 +88,7 @@ public class SpotifyClient {
             List<JsonNode> itemsList = new ArrayList<>();
             userItems.forEach(itemsList::add);
 
-            itemsList.sort(Comparator.comparing(this::parseSpotifyDate));
+            itemsList.sort(Comparator.comparing(this::parseSpotifyDate).reversed());
             int minSize = Math.min(itemsList.size(),5);
 
             for(int i=0;i<minSize;i++){
