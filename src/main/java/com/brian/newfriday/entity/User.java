@@ -80,4 +80,9 @@ public class User {
 
     }
 
+    public void removeArtist(Artist artist){
+        this.artistSet.remove(artist);
+        artist.getUserSet().remove(this);
+    }
+
 }
