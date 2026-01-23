@@ -1,6 +1,7 @@
 package com.brian.newfriday.service;
 
 import com.brian.newfriday.client.SpotifyClient;
+import com.brian.newfriday.dtos.CompleteAlbumDto;
 import com.brian.newfriday.entity.Album;
 import com.brian.newfriday.entity.Artist;
 import com.brian.newfriday.repository.AlbumRepository;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -64,6 +66,27 @@ public class ArtistService {
 
     public boolean existsBySpotifyID(String spotifyID){
         return artistRepository.existsBySpotifyID(spotifyID);
+    }
+
+    @Transactional
+    public List<Album> bulkAddAlbumsToArtist(String spotifyID){
+        CompleteAlbumDto completeAlbumDto = spotifyClient.getAlbumsByArtistSpotifyId(spotifyID);
+        List<Album> finalAlbumList = new ArrayList<>();
+        Artist currentArtist = getArtistBySpotifyID(spotifyID);
+        for(int i=0;i<completeAlbumDto.getAlbumList().size();i++){
+            Album currentAlbum = albumRepository.save(completeAlbumDto.getAlbumList().get(i));
+
+            currentAlbum.addArtist(currentArtist);
+            if(!completeAlbumDto.getArtistIds().get(i).isEmpty()){
+                List<String> extraArtistList = completeAlbumDto.getArtistIds().get(i);
+                for(int j=0;j<extraArtistList.size();j++){
+                    Artist extraArtist = getArtistBySpotifyID(extraArtistList.get(j));
+                    currentAlbum.addArtist(extraArtist);
+                }
+            }
+            finalAlbumList.add(currentAlbum);
+        }
+        return finalAlbumList;
     }
 
 
