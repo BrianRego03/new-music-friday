@@ -18,8 +18,8 @@ public class NewfridayApplication {
 //        System.out.println(servicing.fetchSpotifyToken());
         var altService = context.getBean(SpotifyClient.class);
 //        altService.getArtist("1oPRcJUkloHaRLYx0olBLJ");
-//        altService.getArtistInclusive("1oPRcJUkloHaRLYx0olBLJ");
-//        altService.getArtistInclusive("2gsggkzM5R49q6jpPvazou");
+//        altService.getAlbumsById("1oPRcJUkloHaRLYx0olBLJ");
+//        altService.getAlbumsById("2gsggkzM5R49q6jpPvazou");
 //        altService.searchArtist("magdalena bay");
         var userServicer = context.getBean(UserService.class);
 //        userServicer.registerUser("Tina","tina1717@gmail.com","funnystuff");

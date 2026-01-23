@@ -8,7 +8,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.function.Supplier;
 
 @Service
@@ -39,7 +38,7 @@ public class SpotifyClient {
         return;
     }
 
-    public void getArtistInclusive(String id){
+    public void getAlbumsById(String id){
         if(id==null){
             return;
         }
