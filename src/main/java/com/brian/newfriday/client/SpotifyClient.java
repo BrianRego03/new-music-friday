@@ -4,6 +4,7 @@ import com.brian.newfriday.dtos.SpotifyAlbumDto;
 import com.brian.newfriday.dtos.SpotifyArtistDto;
 import com.brian.newfriday.entity.Album;
 import com.brian.newfriday.entity.Artist;
+import com.brian.newfriday.mappers.AlbumMapper;
 import com.brian.newfriday.mappers.ArtistMapper;
 import com.brian.newfriday.repository.ArtistRepository;
 import com.brian.newfriday.service.SpotifyTokenService;
@@ -16,6 +17,7 @@ import org.springframework.web.client.RestClient;
 import javax.sound.midi.Soundbank;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -24,15 +26,17 @@ public class SpotifyClient {
     private final RestClient restClient;
     private final SpotifyTokenService spotifyTokenService;
     private final ArtistMapper artistMapper;
+    private final AlbumMapper albumMapper;
     private final ArtistRepository artistRepository;
     private final String baseUrl = "https://api.spotify.com/v1/";
 
     public SpotifyClient(RestClient restClient,SpotifyTokenService spotifyTokenService,
-                         ArtistMapper artistMapper, ArtistRepository artistRepository){
+                         ArtistMapper artistMapper, ArtistRepository artistRepository,AlbumMapper albumMapper){
         this.restClient=restClient;
         this.spotifyTokenService=spotifyTokenService;
         this.artistMapper=artistMapper;
         this.artistRepository=artistRepository;
+        this.albumMapper=albumMapper;
     }
 
     public Artist getArtistFromSpotify(String id){
@@ -72,19 +76,18 @@ public class SpotifyClient {
         );
         JsonNode userItems = user.get("items");
 
-        List<SpotifyAlbumDto> dtoItemList = new ArrayList<>();
+        List<Album> AlbumList = new ArrayList<>();
         List<List<String>> artistIds = new ArrayList<>();
         if(userItems!=null && userItems.isArray()){
 
             List<JsonNode> itemsList = new ArrayList<>();
             userItems.forEach(itemsList::add);
 
-            itemsList.sort((a,b)->{
-                String dateA = a.get("release_date").asText();
-                String dateB = b.get("release_date").asText();
-                return dateA.compareTo(dateB);
-            });
+            itemsList.sort(Comparator.comparing(
+                    a -> LocalDate.parse(a.get("release_date").asText())
+            ));
             int minSize = Math.min(itemsList.size(),5);
+            String currentArtistId="";
             for(int i=0;i<minSize;i++){
                 JsonNode currentItem = itemsList.get(i);
                 SpotifyAlbumDto albumDto = new SpotifyAlbumDto(
@@ -97,10 +100,22 @@ public class SpotifyClient {
                         LocalDate.parse(currentItem.get("release_date").asText()),
                         currentItem.get("album_type").asText()
                 );
-                dtoItemList.add(albumDto);
+                AlbumList.add(albumMapper.toAlbumEntity(albumDto));
                 List<String> artistId = new ArrayList<>();
+
                 for(JsonNode artist : currentItem.get("artists")){
-                    artistId.add(artist.get("id").asText());
+                    if((currentArtistId.isEmpty() &&(currentItem.get("artists").size()==1))){
+                        currentArtistId = artist.get("id").asText();
+                        break;
+                    }
+                }
+                for(JsonNode artist : currentItem.get("artists")){
+                    if(currentItem.get("artists").size()==1){
+                        artistId = new ArrayList<>();
+                    }else if(!(currentArtistId.equals(artist.get("id").asText()))){
+                        artistId.add(artist.get("id").asText());
+                    }
+
 
                 }
                 artistIds.add(artistId);
