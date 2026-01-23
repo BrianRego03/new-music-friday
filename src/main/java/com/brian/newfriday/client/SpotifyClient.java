@@ -71,21 +71,10 @@ public class SpotifyClient {
 
         );
         JsonNode userItems = user.get("items");
+
         List<SpotifyAlbumDto> dtoItemList = new ArrayList<>();
+        List<List<String>> artistIds = new ArrayList<>();
         if(userItems!=null && userItems.isArray()){
-            for(JsonNode item : userItems){
-                SpotifyAlbumDto albumDto = new SpotifyAlbumDto(
-                        item.get("name").asText(),
-                        item.get("id").asText(),
-                        item.get("images").get(2).get("url").asText(),
-                        item.get("images").get(1).get("url").asText(),
-                        item.get("images").get(0).get("url").asText(),
-                        item.get("total_tracks").asInt(),
-                        LocalDate.parse(item.get("release_date").asText()),
-                        item.get("album_type").asText()
-                );
-                dtoItemList.add(albumDto);
-            }
 
             List<JsonNode> itemsList = new ArrayList<>();
             userItems.forEach(itemsList::add);
@@ -95,10 +84,26 @@ public class SpotifyClient {
                 String dateB = b.get("release_date").asText();
                 return dateA.compareTo(dateB);
             });
+            int minSize = Math.min(itemsList.size(),5);
+            for(int i=0;i<minSize;i++){
+                JsonNode currentItem = itemsList.get(i);
+                SpotifyAlbumDto albumDto = new SpotifyAlbumDto(
+                        currentItem.get("name").asText(),
+                        currentItem.get("id").asText(),
+                        currentItem.get("images").get(2).get("url").asText(),
+                        currentItem.get("images").get(1).get("url").asText(),
+                        currentItem.get("images").get(0).get("url").asText(),
+                        currentItem.get("total_tracks").asInt(),
+                        LocalDate.parse(currentItem.get("release_date").asText()),
+                        currentItem.get("album_type").asText()
+                );
+                dtoItemList.add(albumDto);
+                List<String> artistId = new ArrayList<>();
+                for(JsonNode artist : currentItem.get("artists")){
+                    artistId.add(artist.get("id").asText());
 
-            for(JsonNode item : itemsList){
-
-                System.out.println(item.get("name") + " released on " + item.get("release_date"));
+                }
+                artistIds.add(artistId);
             }
         }
 
