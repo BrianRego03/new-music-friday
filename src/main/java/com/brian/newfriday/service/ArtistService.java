@@ -48,6 +48,7 @@ public class ArtistService {
         return "Success";
     }
 
+    @Transactional
     public Artist getArtistBySpotifyID(String spotifyID){
         Artist artist = artistRepository.findBySpotifyID(spotifyID);
         if(artist != null){
@@ -57,7 +58,7 @@ public class ArtistService {
         if(artist == null){
             throw new EntityNotFoundException("Artist not found with Spotify ID: " + spotifyID);
         }
-        saveArtist(artist);
+        artistRepository.save(artist);
         return artist;
     }
 
@@ -65,10 +66,7 @@ public class ArtistService {
         return artistRepository.existsBySpotifyID(spotifyID);
     }
 
-    @Transactional
-    public void saveArtist(Artist artist){
-        artistRepository.save(artist);
-    }
+
 
     @Transactional
     public void addAlbumBySpotifyID(String artistId, String albumId){
