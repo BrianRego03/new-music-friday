@@ -74,8 +74,11 @@ public class ArtistService {
         List<Album> finalAlbumList = new ArrayList<>();
         Artist currentArtist = getArtistBySpotifyID(spotifyID);
         for(int i=0;i<completeAlbumDto.getAlbumList().size();i++){
-            Album currentAlbum = albumRepository.save(completeAlbumDto.getAlbumList().get(i));
-
+            Album currentAlbum = completeAlbumDto.getAlbumList().get(i);
+            if(albumRepository.existBySpotifyID(currentAlbum.getSpotifyID())){
+                continue;
+            }
+            currentAlbum = albumRepository.save(completeAlbumDto.getAlbumList().get(i));
             currentAlbum.addArtist(currentArtist);
             if(!completeAlbumDto.getArtistIds().get(i).isEmpty()){
                 List<String> extraArtistList = completeAlbumDto.getArtistIds().get(i);
