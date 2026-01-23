@@ -88,9 +88,7 @@ public class SpotifyClient {
             List<JsonNode> itemsList = new ArrayList<>();
             userItems.forEach(itemsList::add);
 
-            itemsList.sort(Comparator.comparing(
-                    a -> LocalDate.parse(a.get("release_date").asText())
-            ));
+            itemsList.sort(Comparator.comparing(this::parseSpotifyDate));
             int minSize = Math.min(itemsList.size(),5);
 
             for(int i=0;i<minSize;i++){
@@ -102,7 +100,7 @@ public class SpotifyClient {
                         currentItem.get("images").get(1).get("url").asText(),
                         currentItem.get("images").get(0).get("url").asText(),
                         currentItem.get("total_tracks").asInt(),
-                        LocalDate.parse(currentItem.get("release_date").asText()),
+                        parseSpotifyDate(currentItem),
                         currentItem.get("album_type").asText()
                 );
                 AlbumList.add(albumMapper.toAlbumEntity(albumDto));
@@ -129,6 +127,18 @@ public class SpotifyClient {
 
 
         return new CompleteAlbumDto(AlbumList,artistIds,currentArtistId);
+    }
+
+    private LocalDate parseSpotifyDate(JsonNode item) {
+        String date = item.get("release_date").asText();
+        String precision = item.get("release_date_precision").asText();
+
+        return switch (precision) {
+            case "year" -> LocalDate.of(Integer.parseInt(date), 1, 1);
+            case "month" -> LocalDate.parse(date + "-01");
+            case "day" -> LocalDate.parse(date);
+            default -> throw new IllegalArgumentException("Unknown precision: " + precision);
+        };
     }
 
     public void searchArtist(String searchtext){

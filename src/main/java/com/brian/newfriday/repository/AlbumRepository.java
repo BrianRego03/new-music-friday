@@ -15,5 +15,5 @@ public interface AlbumRepository extends JpaRepository<Album, Integer> {
     List<Album> findByArtistSet_SpotifyID(String spotifyId);
     List<Album> findByArtistSet_SpotifyIDAndAlbumType(String spotifyId, Record albumType);
 
-    Boolean existBySpotifyID(String spotifyId);
+    Boolean existsBySpotifyID(String spotifyId);
 }

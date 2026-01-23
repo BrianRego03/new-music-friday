@@ -75,7 +75,7 @@ public class ArtistService {
         Artist currentArtist = getArtistBySpotifyID(spotifyID);
         for(int i=0;i<completeAlbumDto.getAlbumList().size();i++){
             Album currentAlbum = completeAlbumDto.getAlbumList().get(i);
-            if(albumRepository.existBySpotifyID(currentAlbum.getSpotifyID())){
+            if(albumRepository.existsBySpotifyID(currentAlbum.getSpotifyID())){
                 continue;
             }
             currentAlbum = albumRepository.save(completeAlbumDto.getAlbumList().get(i));
