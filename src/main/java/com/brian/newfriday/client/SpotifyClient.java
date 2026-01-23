@@ -44,7 +44,7 @@ public class SpotifyClient {
 
         SpotifyArtistDto artistDto = new SpotifyArtistDto(
                 user.get("name").asText(),
-                user.get("external_urls").get("spotify").asText(),
+                user.get("id").asText(),
                 user.get("images").get(2).get("url").asText(),
                 user.get("images").get(1).get("url").asText(),
                 user.get("images").get(0).get("url").asText()
