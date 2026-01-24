@@ -30,13 +30,15 @@ public class ArtistController {
     }
 
     @GetMapping("/artists/{spotifyId}" )
-    public SpotifyArtistDto getArtistBySpotifyId(@PathVariable String spotifyId){
+    public ArtistResponseDto getArtistBySpotifyId(@PathVariable String spotifyId){
 //        Artist artist = artistService.getArtistBySpotifyID(spotifyId);
         Artist artist = artistService.getCompleteArtist(spotifyId);
         SpotifyArtistDto artistDto = artistMapper.toSpotifyDto(artist);
         List<SpotifyAlbumDto> albumDtos = artist.getAlbumList()
                 .stream().map(albumMapper::toDto).toList();
-        return artistMapper.toSpotifyDto(artist);
+        ArtistResponseDto responseDto = new ArtistResponseDto(artistDto, albumDtos);
+//        return artistMapper.toSpotifyDto(artist);
+        return responseDto;
     }
 
     @GetMapping("/artists")
