@@ -15,6 +15,10 @@ public interface AlbumMapper {
     @Mapping(source = "spotifyID", target = "spotifyID")
     Album toAlbumEntity(SpotifyAlbumDto albumDto);
 
+    @Mapping(source = "albumType", target = "albumType", qualifiedByName = "mapAlbumString")
+    @Mapping(source = "spotifyID", target = "spotifyID")
+    SpotifyAlbumDto toDto(Album album);
+
     @Named("mapAlbumType")
     default Record mapAlbumType(String albumType) {
         if (albumType == null) {
@@ -26,7 +30,22 @@ public interface AlbumMapper {
             case "single":
                 return Record.SINGLE;
             default:
-                throw new IllegalArgumentException("Unknown album type: " + albumType);
+                return null;
+        }
+    }
+
+    @Named("mapAlbumString")
+    default String mapAlbumString(Record albumType) {
+        if (albumType == null) {
+            return null;
+        }
+        switch (albumType) {
+            case ALBUM:
+                return "album";
+            case SINGLE:
+                return "single";
+            default:
+                return null;
         }
     }
 
