@@ -14,10 +14,13 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final ArtistRepository artistRepository;
+    private final ArtistService artistService;
 
-    public UserService(UserRepository userRepository, ArtistRepository artistRepository){
+    public UserService(UserRepository userRepository, ArtistRepository artistRepository,
+                       ArtistService artistService){
         this.userRepository=userRepository;
         this.artistRepository=artistRepository;
+        this.artistService=artistService;
     }
 
     @Transactional
@@ -51,7 +54,8 @@ public class UserService {
     @Transactional
     public void addArtistToUser(int userId, String artistId){
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
-        Artist artist = artistRepository.findBySpotifyID(artistId);
+//        Artist artist = artistRepository.findBySpotifyID(artistId);
+        Artist artist = artistService.getCompleteArtist(artistId);
 //        if (artist == null) {
 //
 //        }

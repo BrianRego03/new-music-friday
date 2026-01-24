@@ -118,6 +118,18 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/users/favourites/{artistSpotifyId}")
+    public ResponseEntity<?> addArtistToUser(@PathVariable String artistSpotifyId){
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        Integer identity = (Integer) authentication.getPrincipal();
+        var user = userRepository.findById(identity).orElse(null);
+        if(user==null){
+            return ResponseEntity.notFound().build();
+        }
+        userService.addArtistToUser(identity,artistSpotifyId);
+        return ResponseEntity.noContent().build();
+    }
+
 
 
 }
