@@ -122,12 +122,8 @@ public class UserController {
     public ResponseEntity<?> addArtistToUser(@PathVariable String artistSpotifyId){
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         Integer identity = (Integer) authentication.getPrincipal();
-        var user = userRepository.findById(identity).orElse(null);
-        if(user==null){
-            return ResponseEntity.notFound().build();
-        }
         userService.addArtistToUser(identity,artistSpotifyId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
 
