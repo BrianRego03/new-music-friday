@@ -1,7 +1,9 @@
 package com.brian.newfriday.service;
 
+import com.brian.newfriday.dtos.SpotifyArtistDto;
 import com.brian.newfriday.entity.Artist;
 import com.brian.newfriday.entity.User;
+import com.brian.newfriday.mappers.ArtistMapper;
 import com.brian.newfriday.repository.ArtistRepository;
 import com.brian.newfriday.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -15,12 +17,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final ArtistRepository artistRepository;
     private final ArtistService artistService;
+    private  final ArtistMapper artistMapper;
 
     public UserService(UserRepository userRepository, ArtistRepository artistRepository,
-                       ArtistService artistService){
+                       ArtistService artistService, ArtistMapper artistMapper){
         this.userRepository=userRepository;
         this.artistRepository=artistRepository;
         this.artistService=artistService;
+        this.artistMapper=artistMapper;
     }
 
     @Transactional
@@ -59,6 +63,12 @@ public class UserService {
         user.AddArtist(artist);
         userRepository.save(user);
 
+    }
+
+    public List<SpotifyArtistDto> getUserArtistsDto(int userId){
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        List<Artist> artists = user.getArtistList();
+        return artists.stream().map(artistMapper::toSpotifyDto).toList();
     }
 
 }
