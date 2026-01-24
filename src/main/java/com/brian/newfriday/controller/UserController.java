@@ -131,6 +131,14 @@ public class UserController {
         return ResponseEntity.ok(artistDtos);
     }
 
+    @DeleteMapping("/users/favourites/{artistSpotifyId}")
+    public ResponseEntity<?> removeArtistFromUser(@PathVariable String artistSpotifyId){
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        Integer identity = (Integer) authentication.getPrincipal();
+        userService.removeArtistFromUser(identity,artistSpotifyId);
+        return ResponseEntity.noContent().build();
+    }
+
 
 
 }
