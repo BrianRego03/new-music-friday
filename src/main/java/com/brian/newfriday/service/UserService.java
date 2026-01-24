@@ -52,15 +52,20 @@ public class UserService {
     }
 
     @Transactional
-    public void addArtistToUser(int userId, String artistId){
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+    public Boolean addArtistToUser(int userId, String artistId){
+        try{
+            User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
 //        Artist artist = artistRepository.findBySpotifyID(artistId);
-        Artist artist = artistService.getCompleteArtist(artistId);
+            Artist artist = artistService.getCompleteArtist(artistId);
 //        if (artist == null) {
 //
 //        }
-        user.AddArtist(artist);
-        userRepository.save(user);
+            user.AddArtist(artist);
+            userRepository.save(user);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }
