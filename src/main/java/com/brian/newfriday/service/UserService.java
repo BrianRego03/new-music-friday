@@ -71,4 +71,15 @@ public class UserService {
         return artists.stream().map(artistMapper::toSpotifyDto).toList();
     }
 
+    @Transactional
+    public void removeArtistFromUser(int userId, String artistId){
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        Artist artist = artistRepository.findBySpotifyID(artistId);
+        if(artist == null){
+            throw new IllegalArgumentException("Artist not found");
+        }
+        user.removeArtist(artist);
+        userRepository.save(user);
+    }
+
 }
