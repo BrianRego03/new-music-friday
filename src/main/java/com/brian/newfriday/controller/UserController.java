@@ -1,9 +1,6 @@
 package com.brian.newfriday.controller;
 
-import com.brian.newfriday.dtos.ChangePasswordRequest;
-import com.brian.newfriday.dtos.RegisterUserRequest;
-import com.brian.newfriday.dtos.UpdateUserRequest;
-import com.brian.newfriday.dtos.UserDto;
+import com.brian.newfriday.dtos.*;
 import com.brian.newfriday.entity.Role;
 import com.brian.newfriday.mappers.UserMapper;
 import com.brian.newfriday.repository.UserRepository;
@@ -124,6 +121,14 @@ public class UserController {
         Integer identity = (Integer) authentication.getPrincipal();
         userService.addArtistToUser(identity,artistSpotifyId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/users/favourites")
+    public ResponseEntity<List<SpotifyArtistDto>> getUserArtists(){
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        Integer identity = (Integer) authentication.getPrincipal();
+        var artistDtos = userService.getUserArtistsDto(identity);
+        return ResponseEntity.ok(artistDtos);
     }
 
 
