@@ -27,7 +27,7 @@ public class ArtistController {
     @GetMapping("/artists/{spotifyId}" )
     public SpotifyArtistDto getArtistBySpotifyId(@PathVariable String spotifyId){
 //        Artist artist = artistService.getArtistBySpotifyID(spotifyId);
-        Artist artist = artistService.bulkAddAlbumsToArtist(spotifyId);
+        Artist artist = artistService.getCompleteArtist(spotifyId);
         return artistMapper.toSpotifyDto(artist);
     }
 

@@ -69,7 +69,7 @@ public class ArtistService {
     }
 
     @Transactional
-    public Artist bulkAddAlbumsToArtist(String spotifyID){
+    public Artist getCompleteArtist(String spotifyID){
         Artist currentArtist = getArtistBySpotifyID(spotifyID);
         if(!(currentArtist.getAlbumList().size()<5)){
             return currentArtist;
