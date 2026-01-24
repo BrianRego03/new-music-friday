@@ -144,12 +144,12 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/users/newMusicWeek")
-    public ResponseEntity<List<SpotifyAlbumDto>> getNewMusicWeek(){
+    @GetMapping("/users/newMusic/{duration}")
+    public ResponseEntity<List<SpotifyAlbumDto>> getNewMusicWeek(@PathVariable int duration){
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         Integer identity = (Integer) authentication.getPrincipal();
         LocalDate today = LocalDate.now();
-        LocalDate startDate = today.minusDays(5);
+        LocalDate startDate = today.minusDays(duration);
         List<Album> albums = userRepository.getAlbumsByUserIdAndReleaseDateBetween( identity,startDate, today);
         var albumDtos = albums.stream()
                 .map(albumMapper::toDto)
