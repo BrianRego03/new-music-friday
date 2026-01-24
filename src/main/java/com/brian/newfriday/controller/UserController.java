@@ -1,7 +1,9 @@
 package com.brian.newfriday.controller;
 
 import com.brian.newfriday.dtos.*;
+import com.brian.newfriday.entity.Album;
 import com.brian.newfriday.entity.Role;
+import com.brian.newfriday.mappers.AlbumMapper;
 import com.brian.newfriday.mappers.UserMapper;
 import com.brian.newfriday.repository.UserRepository;
 import com.brian.newfriday.service.UserService;
@@ -13,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -22,13 +25,15 @@ public class UserController {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AlbumMapper albumMapper;
 
     public UserController (UserService userService, UserMapper userMapper, UserRepository userRepository,
-                            PasswordEncoder passwordEncoder){
+                            PasswordEncoder passwordEncoder, AlbumMapper albumMapper){
         this.userService=userService;
         this.userMapper=userMapper;
         this.userRepository=userRepository;
         this.passwordEncoder=passwordEncoder;
+        this.albumMapper=albumMapper;
 
     }
 
@@ -137,6 +142,19 @@ public class UserController {
         Integer identity = (Integer) authentication.getPrincipal();
         userService.removeArtistFromUser(identity,artistSpotifyId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/users/newMusicWeek")
+    public ResponseEntity<List<SpotifyAlbumDto>> getNewMusicWeek(){
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        Integer identity = (Integer) authentication.getPrincipal();
+        LocalDate today = LocalDate.now();
+        LocalDate startDate = today.minusDays(5);
+        List<Album> albums = userRepository.getAlbumsByUserIdAndReleaseDateBetween( identity,startDate, today);
+        var albumDtos = albums.stream()
+                .map(albumMapper::toDto)
+                .toList();
+        return ResponseEntity.ok(albumDtos);
     }
 
 

@@ -19,8 +19,8 @@ public interface UserRepository extends JpaRepository<User,Integer> {
                     JOIN a.artistSet artist
                     JOIN artist.userSet user
                     WHERE user.id = :userId
-                    AND (:startDate IS NULL OR a.releaseDate >= :startDate)
-                    AND (:endDate IS NULL OR a.releaseDate <= :endDate)
+                    AND (a.releaseDate >= :startDate)
+                    AND (a.releaseDate <= :endDate)
                     ORDER BY a.releaseDate DESC
                   
                     """
