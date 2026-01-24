@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -72,6 +73,10 @@ public class User {
 
     public Set<Artist> getArtistSet(){
         return this.artistSet;
+    }
+
+    public List<Artist> getArtistList(){
+        return this.artistSet.stream().toList();
     }
 
     public void AddArtist(Artist artist){
