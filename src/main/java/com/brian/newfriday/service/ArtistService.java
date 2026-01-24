@@ -70,9 +70,13 @@ public class ArtistService {
 
     @Transactional
     public Artist bulkAddAlbumsToArtist(String spotifyID){
+        Artist currentArtist = getArtistBySpotifyID(spotifyID);
+        if(!(currentArtist.getAlbumList().size()<5)){
+            return currentArtist;
+        }
         CompleteAlbumDto completeAlbumDto = spotifyClient.getAlbumsByArtistSpotifyId(spotifyID);
         List<Album> finalAlbumList = new ArrayList<>();
-        Artist currentArtist = getArtistBySpotifyID(spotifyID);
+
         for(int i=0;i<completeAlbumDto.getAlbumList().size();i++){
             Album currentAlbum = completeAlbumDto.getAlbumList().get(i);
             if(albumRepository.existsBySpotifyID(currentAlbum.getSpotifyID())){
