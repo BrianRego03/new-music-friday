@@ -23,31 +23,5 @@ public interface AlbumRepository extends JpaRepository<Album, Integer> {
 
     Optional<Album> findTopByArtistSet_SpotifyIDOrderByReleaseDateDesc(String spotifyId);
 
-    @Query("""
-            SELECT DISTINCT a
-            FROM Album a 
-            JOIN a.artistSet artist
-            WHERE artist.spotifyID IN :artistIDs
-                AND a.releaseDate = (
-                            SELECT MAX(a2.releaseDate)
-                            FROM Album a2
-                            JOIN a2.artistSet artist2
-                            WHERE artist2.spotifyID=artist.spotifyID
-                            )             
-            """)
-    List<Album> bulkFindLatestAlbums(@Param("artistIDs") List<String> artistIDs);
 
-    @Query("""
-            SELECT DISTINCT a
-            FROM Album a
-            JOIN a.artistSet artist
-            JOIN artist.userSet u
-            WHERE u.id = :userID
-            AND artist.spotifyID IN :artistIDs
-                AND (:startDate IS NULL OR a.releaseDate >= :startDate)
-                AND (:endDate   IS NULL OR a.releaseDate <= :endDate)
-            ORDER BY a.releaseDate DESC
-            """)
-    List<Album> bulkFindFavouriteAlbums(@Param("artistIDs") List<String> artistIDs, @Param("userID") Integer userID,
-                                              @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 }

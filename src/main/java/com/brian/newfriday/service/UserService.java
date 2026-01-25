@@ -86,15 +86,6 @@ public class UserService {
         user.removeArtist(artist);
         userRepository.save(user);
     }
-
-    public List<Album> getNewWeeklyAlbums(int userId){
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
-        List<Artist> artists = user.getArtistList();
-        List<String> spotifyIds = artists.stream().map(Artist::getSpotifyID).toList();
-        LocalDate today = LocalDate.now();
-        LocalDate prevDate = today.minusDays(6);
-
-        return albumRepository.bulkFindFavouriteAlbums(spotifyIds,user.getId(),today,prevDate);
-    }
+    
 
 }
