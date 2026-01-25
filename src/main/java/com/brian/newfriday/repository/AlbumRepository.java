@@ -5,6 +5,7 @@ import com.brian.newfriday.entity.Record;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AlbumRepository extends JpaRepository<Album, Integer> {
     Album findBySpotifyID(String spotifyId);
@@ -16,4 +17,6 @@ public interface AlbumRepository extends JpaRepository<Album, Integer> {
     List<Album> findByArtistSet_SpotifyIDAndAlbumType(String spotifyId, Record albumType);
 
     Boolean existsBySpotifyID(String spotifyId);
+
+    Optional<Album> findAlbumByArtistSet_SpotifyIDOrderByReleaseDateDesc(String spotifyId);
 }
