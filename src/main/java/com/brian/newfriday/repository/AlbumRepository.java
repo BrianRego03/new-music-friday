@@ -28,11 +28,29 @@ public interface AlbumRepository extends JpaRepository<Album, Integer> {
             JOIN a.artistSet artist
             WHERE artist.spotifyID IN :artistIDs
                 AND a.releaseDate = (
-                            SELECT MAX (a2.releaseDate)
+                            SELECT MAX(a2.releaseDate)
                             FROM Album a2
                             JOIN a2.artistSet artist2
                             WHERE artist2.spotifyID=artist.spotifyID
                             )             
             """)
     List<Album> bulkFindLatestAlbums(@Param("artistIDs") List<String> artistIDs);
+
+    @Query("""
+            SELECT DISTINCT a
+            FROM Album a
+            JOIN a.artistSet artist
+            JOIN artist.userSet u
+            WHERE u.id = :userID
+            AND artist.spotifyID IN :artistIDs
+                AND a.releaseDate = (
+                            SELECT MAX(a2.releaseDate)
+                            FROM Album a2
+                            JOIN a2.artistSet artist2
+                            JOIN artist2.userSet u2
+                            WHERE artist2.spotifyID=artist.spotifyID
+                            AND u2.id = :userID
+                            )
+            """)
+    List<Album> bulkFindLatestFavouriteAlbums(@Param("artistIDs") List<String> artistIDs,  @Param("userID") Integer userID);
 }
