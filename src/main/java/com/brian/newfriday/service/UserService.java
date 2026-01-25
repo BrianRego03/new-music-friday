@@ -1,15 +1,18 @@
 package com.brian.newfriday.service;
 
 import com.brian.newfriday.dtos.SpotifyArtistDto;
+import com.brian.newfriday.entity.Album;
 import com.brian.newfriday.entity.Artist;
 import com.brian.newfriday.entity.User;
 import com.brian.newfriday.mappers.ArtistMapper;
+import com.brian.newfriday.repository.AlbumRepository;
 import com.brian.newfriday.repository.ArtistRepository;
 import com.brian.newfriday.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -18,13 +21,15 @@ public class UserService {
     private final ArtistRepository artistRepository;
     private final ArtistService artistService;
     private  final ArtistMapper artistMapper;
+    private final AlbumRepository albumRepository;
 
     public UserService(UserRepository userRepository, ArtistRepository artistRepository,
-                       ArtistService artistService, ArtistMapper artistMapper){
+                       ArtistService artistService, ArtistMapper artistMapper, AlbumRepository albumRepository) {
         this.userRepository=userRepository;
         this.artistRepository=artistRepository;
         this.artistService=artistService;
         this.artistMapper=artistMapper;
+        this.albumRepository=albumRepository;
     }
 
     @Transactional
@@ -80,6 +85,16 @@ public class UserService {
         }
         user.removeArtist(artist);
         userRepository.save(user);
+    }
+
+    public List<Album> getNewWeeklyAlbums(int userId){
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        List<Artist> artists = user.getArtistList();
+        List<String> spotifyIds = artists.stream().map(Artist::getSpotifyID).toList();
+        LocalDate today = LocalDate.now();
+        LocalDate prevDate = today.minusDays(6);
+
+        return albumRepository.bulkFindFavouriteAlbums(spotifyIds,user.getId(),today,prevDate);
     }
 
 }
