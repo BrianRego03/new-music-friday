@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,14 +44,10 @@ public interface AlbumRepository extends JpaRepository<Album, Integer> {
             JOIN artist.userSet u
             WHERE u.id = :userID
             AND artist.spotifyID IN :artistIDs
-                AND a.releaseDate = (
-                            SELECT MAX(a2.releaseDate)
-                            FROM Album a2
-                            JOIN a2.artistSet artist2
-                            JOIN artist2.userSet u2
-                            WHERE artist2.spotifyID=artist.spotifyID
-                            AND u2.id = :userID
-                            )
+                AND (:startDate IS NULL OR a.releaseDate >= :startDate)
+                AND (:endDate   IS NULL OR a.releaseDate <= :endDate)
+            ORDER BY a.releaseDate DESC
             """)
-    List<Album> bulkFindLatestFavouriteAlbums(@Param("artistIDs") List<String> artistIDs,  @Param("userID") Integer userID);
+    List<Album> bulkFindFavouriteAlbums(@Param("artistIDs") List<String> artistIDs, @Param("userID") Integer userID,
+                                              @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 }
