@@ -1,6 +1,7 @@
 package com.brian.newfriday.service;
 
 import com.brian.newfriday.client.SpotifyClient;
+import com.brian.newfriday.dtos.ArtistLatestDto;
 import com.brian.newfriday.dtos.CompleteAlbumDto;
 import com.brian.newfriday.entity.Album;
 import com.brian.newfriday.entity.Artist;
@@ -198,6 +199,23 @@ public class ArtistService {
         }
         return artistRepository.getAlbumsBySpotifyIDAndReleaseDateBetween(artistId, fromDate,
                 toDate, pageable);
+    }
+
+    public void refreshArtistData(){
+        List<ArtistLatestDto> latestArtists = artistRepository.getLatestArtistsWithAlbums();
+        for(ArtistLatestDto artistDto : latestArtists) {
+            String artistSpotifyId = artistDto.getArtistId();
+            String latestAlbumSpotifyId = artistDto.getLatestAlbumId();
+            String ApiLatestAlbumId = spotifyClient.getLatestAlbumByArtistSpotifyId(artistSpotifyId);
+            if (ApiLatestAlbumId == null) {
+                continue;
+            }
+            if (!ApiLatestAlbumId.equals(latestAlbumSpotifyId)) {
+                getCompleteArtist(artistSpotifyId);
+            }else{
+                continue;
+            }
+        }
     }
 
 
