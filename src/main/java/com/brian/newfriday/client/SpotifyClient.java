@@ -129,6 +129,39 @@ public class SpotifyClient {
         return new CompleteAlbumDto(AlbumList,artistIds,currentArtistId);
     }
 
+    public String getLatestAlbumByArtistSpotifyId(String id){
+        if(id==null){
+            return null;
+        }
+        var user = executeWithTokenRetry(()->restClient.get()
+                .uri(baseUrl + "artists/" + id +"/albums?include_groups=album,single&market=US&limit=50")
+                .header("Authorization", "Bearer " + spotifyTokenService.getSpotifyToken())
+                .retrieve()
+                .body(JsonNode.class)
+
+        );
+        if(user==null){
+            throw new IllegalStateException("Spotify response was bad");
+        }
+        JsonNode userItems = user.get("items");
+
+        List<Album> AlbumList = new ArrayList<>();
+        List<List<String>> artistIds = new ArrayList<>();
+        String currentArtistId="";
+        if(userItems!=null && userItems.isArray()){
+
+            List<JsonNode> itemsList = new ArrayList<>();
+            userItems.forEach(itemsList::add);
+
+            itemsList.sort(Comparator.comparing(this::parseSpotifyDate).reversed());
+            int minSize = Math.min(itemsList.size(),5);
+            return itemsList.get(0).get("id").asText();
+
+
+        }
+        return null;
+    }
+
     private LocalDate parseSpotifyDate(JsonNode item) {
         String date = item.get("release_date").asText();
         String precision = item.get("release_date_precision").asText();
