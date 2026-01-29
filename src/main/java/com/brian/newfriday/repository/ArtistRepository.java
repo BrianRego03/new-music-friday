@@ -31,7 +31,7 @@ public interface ArtistRepository extends JpaRepository<Artist,Integer> {
             @Param("pageable") Pageable pageable);
 
     @Query("""
-            SELECT DISTINCT new com.brian.newfriday.dtos.ArtistLatestDto(art.spotifyID,album.spotifyID)
+            SELECT new com.brian.newfriday.dtos.ArtistLatestDto(art.spotifyID,album.spotifyID)
             from Artist art
             JOIN art.albumSet album
             JOIN art.userSet user
