@@ -34,6 +34,7 @@ public class ArtistRefreshService {
         try{
             List<ArtistLatestDto> latestArtists = artistRepository.getLatestArtistsWithAlbums();
             System.out.println("Listed successfully");
+            System.out.println(latestArtists.toString());
             for(ArtistLatestDto artistLatestDto : latestArtists){
                 while(paused.get()){
                     Thread.sleep(1000);
