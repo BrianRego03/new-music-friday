@@ -16,3 +16,13 @@ app:
     secret: ${JWT_SECRET}
     accessTokenExpiration: 900
     refreshTokenExpiration: 604800
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,httpexchanges
+    health:
+      show-details: always
+    httpexchanges:
+      enabled: true
