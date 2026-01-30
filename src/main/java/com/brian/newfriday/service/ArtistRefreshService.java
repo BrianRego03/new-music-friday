@@ -51,7 +51,7 @@ public class ArtistRefreshService {
                     continue;
                 }
                 artistService.getCompleteArtist(artistID);
-                log.info("Refreshed artist data for artist ID: " + artistID);
+                log.info("Refreshed artist data for artist ID: {}",artistID);
 
             }
             return CompletableFuture.completedFuture(null);
