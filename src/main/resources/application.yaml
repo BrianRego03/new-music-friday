@@ -26,3 +26,19 @@ management:
       show-details: always
     httpexchanges:
       enabled: true
+
+logging:
+  level:
+    root: INFO
+    com.example.newfriday: DEBUG
+    org.springframework.web: INFO
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql: TRACE
+  file:
+    name: logs/newfriday.log
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
