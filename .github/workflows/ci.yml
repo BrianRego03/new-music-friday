@@ -91,6 +91,7 @@ jobs:
           GHCR_PAT: ${{ secrets.GHCR_PAT }}
           REMOTE: ${{ env.REMOTE_PATH }}
           SERVICE: ${{ env.APP_SERVICE }}
+          GH_ACTOR: ${{ github.actor }}
         run: |
           set -euo pipefail
           PORT="${SSH_PORT:-22}"
@@ -98,7 +99,7 @@ jobs:
           ssh -i ~/.ssh/id_ed25519 -p "$PORT" "${SSH_USER}@${SSH_HOST}" \
             GHCR_PAT="$GHCR_PAT" REMOTE="$REMOTE" SERVICE="$SERVICE" IMAGE_NAME="$IMAGE_NAME" SHORT_SHA="$SHORT_SHA" bash -s -- <<'EOSH'
             set -euo pipefail
-            echo "$GHCR_PAT" | docker login ghcr.io -u ${GITHUB_ACTOR} --password-stdin
+            echo "$GHCR_PAT" | docker login ghcr.io -u "$GH_ACTOR" --password-stdin
             cd "$REMOTE"
             echo "IMAGE_TAG=$SHORT_SHA" > .deploy.env
             docker compose --env-file .deploy.env pull "$SERVICE"
