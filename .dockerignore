@@ -1,0 +1,29 @@
+# build output
+target/
+
+# dependency caches
+.mvn/
+.m2/
+
+# vcs & CI
+.git
+.github
+
+# env & local files
+.env
+.env.*
+*.local
+
+# IDE files
+.idea
+.vscode
+*.iml
+
+# logs
+*.log
+
+# docker
+docker-compose.yml
+
+# misc
+.DS_Store
