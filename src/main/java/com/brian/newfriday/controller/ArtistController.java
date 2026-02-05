@@ -2,6 +2,7 @@ package com.brian.newfriday.controller;
 
 import com.brian.newfriday.client.SpotifyClient;
 import com.brian.newfriday.dtos.ArtistResponseDto;
+import com.brian.newfriday.dtos.ArtistSearchDto;
 import com.brian.newfriday.dtos.SpotifyAlbumDto;
 import com.brian.newfriday.dtos.SpotifyArtistDto;
 import com.brian.newfriday.entity.Artist;
@@ -11,6 +12,7 @@ import com.brian.newfriday.repository.ArtistRepository;
 import com.brian.newfriday.service.ArtistService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -52,8 +54,8 @@ public class ArtistController {
     }
 
     @GetMapping("/search")
-    public void searchArtists(@RequestParam("q") String searchText){
-        spotifyClient.searchArtist(searchText);
-        return;
+    public List<ArtistSearchDto> searchArtists(@RequestParam("q") String searchText){
+        return spotifyClient.searchArtist(searchText);
+
     }
 }
