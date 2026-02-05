@@ -97,7 +97,8 @@ jobs:
           PORT="${SSH_PORT:-22}"
 
           ssh -i ~/.ssh/id_ed25519 -p "$PORT" "${SSH_USER}@${SSH_HOST}" \
-            GHCR_PAT="$GHCR_PAT" REMOTE="$REMOTE" SERVICE="$SERVICE" IMAGE_NAME="$IMAGE_NAME" SHORT_SHA="$SHORT_SHA" bash -s -- <<'EOSH'
+            GHCR_PAT="$GHCR_PAT" REMOTE="$REMOTE" SERVICE="$SERVICE" IMAGE_NAME="$IMAGE_NAME" SHORT_SHA="$SHORT_SHA" GH_ACTOR="$GH_ACTOR" \
+            bash -s -- <<'EOSH'
             set -euo pipefail
             echo "$GHCR_PAT" | docker login ghcr.io -u "$GH_ACTOR" --password-stdin
             cd "$REMOTE"
