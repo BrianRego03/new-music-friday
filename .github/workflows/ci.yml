@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 env:
-  APP_SERVICE: newmusicfriday
-  REMOTE_PATH: /srv/newMusicFriday
+  APP_SERVICE: new-music-friday
+  REMOTE_PATH: /srv/new-music-friday
 
 jobs:
   build:
