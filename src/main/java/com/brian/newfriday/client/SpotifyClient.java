@@ -1,5 +1,6 @@
 package com.brian.newfriday.client;
 
+import com.brian.newfriday.dtos.ArtistSearchDto;
 import com.brian.newfriday.dtos.CompleteAlbumDto;
 import com.brian.newfriday.dtos.SpotifyAlbumDto;
 import com.brian.newfriday.dtos.SpotifyArtistDto;
@@ -174,9 +175,9 @@ public class SpotifyClient {
         };
     }
 
-    public void searchArtist(String searchtext){
+    public ArrayList<ArtistSearchDto> searchArtist(String searchtext){
         if(searchtext==null){
-            return;
+            return new ArrayList<>();
         }
         var user = executeWithTokenRetry(()->restClient.get()
                 .uri(builder -> builder
@@ -193,6 +194,7 @@ public class SpotifyClient {
         );
         JsonNode userArtists = user.get("artists");
         JsonNode userItems = userArtists.get("items");
+        ArrayList<ArtistSearchDto> searchList = new ArrayList<>();
         if(userItems!=null && userItems.isArray()){
 
             ArrayList<JsonNode> itemsList = new ArrayList<>();
@@ -200,13 +202,19 @@ public class SpotifyClient {
 
             for(JsonNode item : itemsList){
 
-                System.out.println(item.get("name") + " with popularity " + item.get("popularity"));
+//                System.out.println(item.get("name") + " with popularity " + item.get("popularity"));
+                ArtistSearchDto artistObj = new ArtistSearchDto();
+                artistObj.setName(String.valueOf(item.get("name").asText("")));
+                artistObj.setSpotifyId((item.get("name").asText("")));
+                artistObj.setImage((item.path("images").get(1).get("url").asText("")));
+
+                searchList.add(artistObj);
             }
+
+
         }
 
-//        System.out.println(user.get("name"));
-//        System.out.println(user.get("href"));
-        return;
+        return searchList;
     }
     private <T> T executeWithTokenRetry(Supplier<T> request){
         try{
