@@ -1,5 +1,6 @@
 package com.brian.newfriday.controller;
 
+import com.brian.newfriday.client.SpotifyClient;
 import com.brian.newfriday.dtos.ArtistResponseDto;
 import com.brian.newfriday.dtos.SpotifyAlbumDto;
 import com.brian.newfriday.dtos.SpotifyArtistDto;
@@ -8,9 +9,7 @@ import com.brian.newfriday.mappers.AlbumMapper;
 import com.brian.newfriday.mappers.ArtistMapper;
 import com.brian.newfriday.repository.ArtistRepository;
 import com.brian.newfriday.service.ArtistService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,13 +19,16 @@ public class ArtistController {
     private final ArtistService artistService;
     private final  ArtistMapper artistMapper;
     private final AlbumMapper albumMapper;
+    private final SpotifyClient spotifyClient;
+
 
     public ArtistController(ArtistRepository artistRepository, ArtistService artistService,
-                            ArtistMapper artistMapper, AlbumMapper albumMapper){
+                            ArtistMapper artistMapper, AlbumMapper albumMapper, SpotifyClient spotifyClient){
         this.artistRepository = artistRepository;
         this.artistService = artistService;
         this.artistMapper = artistMapper;
         this.albumMapper = albumMapper;
+        this.spotifyClient = spotifyClient;
     }
 
     @GetMapping("/artists/{spotifyId}" )
@@ -47,5 +49,11 @@ public class ArtistController {
         return artists.stream()
                 .map(artistMapper::toSpotifyDto)
                 .toList();
+    }
+
+    @GetMapping("/search")
+    public void searchArtists(@RequestParam("q") String searchText){
+        spotifyClient.searchArtist(searchText);
+        return;
     }
 }
