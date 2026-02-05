@@ -21,7 +21,6 @@ public class ArtistRefreshService {
     private final AtomicBoolean paused = new AtomicBoolean(false);
     private final AtomicBoolean running = new AtomicBoolean(false);
 
-
     private static final Logger log = LoggerFactory.getLogger(ArtistRefreshService.class);
 
     public ArtistRefreshService(ArtistRepository artistRepository, SpotifyClient spotifyClient, ArtistService artistService) {
