@@ -13,7 +13,7 @@ import java.io.IOException;
 
 @RestController
 public class LogController {
-    private static final String LOG_PATH = "/app/logs/app.log";
+    private static final String LOG_PATH = "/app/logs/newfriday.log";
 
     @GetMapping("/logs")
     public ResponseEntity<Resource> downloadLogs() throws IOException {
