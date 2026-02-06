@@ -50,7 +50,7 @@ public class ArtistRefreshService {
                 if(apiLatestAlbumID==null || apiLatestAlbumID.equals(latestAlbumID)){
                     continue;
                 }
-                artistService.getCompleteArtist(artistID);
+                artistService.getCompleteArtist(artistID,true);
                 log.info("Refreshed artist data for artist ID: {}",artistID);
 
             }

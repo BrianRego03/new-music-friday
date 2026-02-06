@@ -97,6 +97,34 @@ public class ArtistService {
         return currentArtist;
     }
 
+    @Transactional
+    public Artist getCompleteArtist(String spotifyID, boolean bypassSizeCheck){
+        Artist currentArtist = getArtistBySpotifyID(spotifyID);
+        if(!bypassSizeCheck && currentArtist.getAlbumList().size()>=5){
+            return currentArtist;
+        }
+        CompleteAlbumDto completeAlbumDto = spotifyClient.getAlbumsByArtistSpotifyId(spotifyID);
+        List<Album> finalAlbumList = new ArrayList<>();
+
+        for(int i=0;i<completeAlbumDto.getAlbumList().size();i++){
+            Album currentAlbum = completeAlbumDto.getAlbumList().get(i);
+            if(albumRepository.existsBySpotifyID(currentAlbum.getSpotifyID())){
+                continue;
+            }
+            currentAlbum = albumRepository.save(completeAlbumDto.getAlbumList().get(i));
+            currentAlbum.addArtist(currentArtist);
+            if(!completeAlbumDto.getArtistIds().get(i).isEmpty()){
+                List<String> extraArtistList = completeAlbumDto.getArtistIds().get(i);
+                for(int j=0;j<extraArtistList.size();j++){
+                    Artist extraArtist = getArtistBySpotifyID(extraArtistList.get(j));
+                    currentAlbum.addArtist(extraArtist);
+                }
+            }
+            finalAlbumList.add(currentAlbum);
+        }
+        return currentArtist;
+    }
+
 
 
     @Transactional
