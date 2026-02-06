@@ -135,7 +135,7 @@ public class SpotifyClient {
             return null;
         }
         var user = executeWithTokenRetry(()->restClient.get()
-                .uri(baseUrl + "artists/" + id +"/albums?include_groups=album,single&market=US&limit=50")
+                .uri(baseUrl + "artists/" + id +"/albums?include_groups=album,single&market=IN&limit=50")
                 .header("Authorization", "Bearer " + spotifyTokenService.getSpotifyToken())
                 .retrieve()
                 .body(JsonNode.class)
